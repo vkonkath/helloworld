@@ -1,0 +1,17 @@
+# ninja log v5
+4	946	1707630535759738892	build.ninja	d2983c35377d8693
+0	25	0	clean	ad90e366ad70d77b
+8	2342	1707556891795638413	_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o	c48f428809522219
+7	2366	1707556891827147223	CMakeFiles/HelloWorldTest.dir/test/test.cpp.o	4d1cea27dd3e2345
+6	2078	1707556891534747107	CMakeFiles/HelloWorld.dir/src/main.cpp.o	9c5d4205f27698bc
+7	3538	1707556892979694545	_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	31bc5b9f7d27c204
+3539	3604	1707556893080310000	lib/libgtestd.a	9b4fea82b87b649b
+2078	2396	1707556891863922419	HelloWorld	98c28b6c280eb6ff
+3635	3676	1707556893150661851	HelloWorldTest	1ce0eda082d26d93
+7	2765	1707556892224568585	_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o	653658034993159c
+7	2422	1707556891890753549	_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o	15df47f7d8f60759
+3641	3673	1707556893148842000	lib/libgmock_maind.a	779e1a41fd4d8319
+3605	3635	1707556893111072000	lib/libgtest_maind.a	c06071c4eab8290d
+3604	3641	1707556893117152000	lib/libgmockd.a	f15d6bdaae1e7b2
+7	5891	1707630535759738892	build.ninja	d2983c35377d8693
+0	10	0	clean	ad90e366ad70d77b
