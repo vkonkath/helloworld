@@ -2,9 +2,9 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main_test" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main_test" ]
   workflow_dispatch:  # Manual trigger
 
 jobs:
@@ -36,41 +36,33 @@ jobs:
             c_compiler: cl
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # Verify Perl installation
-      - name: Verify Perl installation
+      - name: Install Perl and CMake on Ubuntu
+        if: startsWith(matrix.os, 'ubuntu-latest')
         run: |
-          which perl
-          perl --version || echo "Perl not found"
-          
+          sudo apt update
+          sudo apt install -y perl
+          wget -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-linux-x86_64.sh
+          chmod +x cmake-linux.sh
+          ./cmake-linux.sh --prefix=/usr/local --exclude-subdir
+          rm cmake-linux.sh
 
-     
-
-      - name: Download and extract lcov
+      - name: Install CMake on Windows
+        if: startsWith(matrix.os, 'windows-latest')
         run: |
-          curl -OL https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
-          tar -xzvf lcov-1.14.tar.gz
-          mkdir -p lcov-bin
-          mv lcov-1.14/bin/* lcov-bin/
+          curl -LO https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-windows-x86_64.zip
+          Expand-Archive -Path cmake-3.22.0-windows-x86_64.zip -DestinationPath 'C:\Program Files\CMake'
+          del cmake-3.22.0-windows-x86_64.zip
+          setx -m PATH "%PATH%;C:\Program Files\CMake\bin"
 
-      - name: Set lcov directory in PATH
-        run: echo "PATH=\$PATH:$(pwd)/lcov-bin" >> $GITHUB_ENV
-
-      # Verify lcov installation
-      - name: Verify lcov installation
-        run: /usr/bin/perl $HOME/perl/bin/lcov --version || echo "lcov not found"
-
-        
-
-      # Set reusable strings
       - name: Set reusable strings
         id: strings
         shell: bash
         run: |
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-      # Configure CMake
       - name: Configure CMake
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
@@ -79,11 +71,9 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -S ${{ github.workspace }}
 
-      # Build
       - name: Build
         run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-      # Test
       - name: Test
         working-directory: ${{ steps.strings.outputs.build-output-dir }}
         run: ctest --build-config ${{ matrix.build_type }}
