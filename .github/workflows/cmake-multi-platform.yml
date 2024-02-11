@@ -59,7 +59,8 @@ jobs:
 
       # Verify lcov installation
       - name: Verify lcov installation
-        run: perl $HOME/perl/bin/lcov --version || echo "lcov not found"
+        run: /usr/bin/perl $HOME/perl/bin/lcov --version || echo "lcov not found"
+
         
 
       # Set reusable strings
