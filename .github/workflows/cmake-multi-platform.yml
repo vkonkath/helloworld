@@ -67,17 +67,24 @@ jobs:
       - name: Go to repository directory
         run: cd $GITHUB_WORKSPACE || exit 1
 
-      - name: Generate release notes
-        id: release_notes
+      - name: Run unit tests
         run: |
+          g++ -o test $(find test -name '*.cpp')  
+          ./test
+
+
+      #- name: Generate release notes
+      #  id: release_notes
+      #  run: |
           # Fetch the list of merges since the last release
-          git fetch --depth=1 origin main
-          git log --merges --format='%B' $(git describe --tags --abbrev=0)..HEAD > release_notes.txt
+       #   git fetch --depth=1 origin main
+        #  git log --merges --format='%B' $(git describe --tags --abbrev=0)..HEAD > release_notes.txt
 
       # Add your remaining steps here for both Ubuntu and Windows platforms
 
   publish:
-    needs: build
+    if: ${{ success() }}
+    needs: [ build, run-unit-tests ]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
