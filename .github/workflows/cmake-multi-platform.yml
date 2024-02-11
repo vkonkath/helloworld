@@ -65,7 +65,7 @@ jobs:
           repository: vkonkath/helloworld
         
       - name: Go to repository directory
-        run: cd helloworld  # Replace 'helloworld' with the actual directory name if needed
+        run: cd $GITHUB_WORKSPACE/helloworld || exit 1
 
       - name: Generate release notes
         id: release_notes
