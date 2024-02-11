@@ -45,7 +45,9 @@ jobs:
       # Install lcov dependencies (only on Ubuntu)
       - name: Install lcov dependencies
         if: startsWith(matrix.os, 'ubuntu')
-        run: sudo apt-get update && sudo apt-get install -y lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
 
       # Verify lcov installation
       - name: Verify lcov installation
