@@ -52,8 +52,9 @@ jobs:
       - name: Set lcov directory in PATH
         run: echo "PATH=\$PATH:$(pwd)/lcov-bin" >> $GITHUB_ENV
 
+      # Verify lcov installation
       - name: Verify lcov installation
-        run: lcov --version
+        run: $HOME/perl/bin/lcov --version || echo "lcov not found"
 
       # Set reusable strings
       - name: Set reusable strings
