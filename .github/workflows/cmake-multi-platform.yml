@@ -75,6 +75,7 @@ jobs:
       - name: Generate release notes
         id: release_notes
         run: |
+          cd $GITHUB_WORKSPACE
           # Fetch the list of merges since the last release
           git fetch --depth=1 origin main
           git log --merges --format='%B' $(git describe --tags --abbrev=0)..HEAD > release_notes.md
