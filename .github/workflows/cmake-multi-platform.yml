@@ -42,7 +42,7 @@ jobs:
       - name: Verify Perl installation
         run: |
           perl --version || echo "Perl not found"
-          perl $HOME/perl/bin/lcov --version || echo "lcov not found"
+          
 
      
 
@@ -58,7 +58,8 @@ jobs:
 
       # Verify lcov installation
       - name: Verify lcov installation
-        run: $HOME/perl/bin/lcov --version || echo "lcov not found"
+        run: perl $HOME/perl/bin/lcov --version || echo "lcov not found"
+        
 
       # Set reusable strings
       - name: Set reusable strings
