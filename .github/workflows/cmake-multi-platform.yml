@@ -41,6 +41,7 @@ jobs:
       # Verify Perl installation
       - name: Verify Perl installation
         run: |
+          which perl
           perl --version || echo "Perl not found"
           
 
