@@ -36,11 +36,7 @@ jobs:
             c_compiler: cl
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          repository: vkonkath/helloworld
-
+      
       - name: Install Perl on Ubuntu
         if: startsWith(matrix.os, 'ubuntu-latest')
         run: |
@@ -63,6 +59,21 @@ jobs:
           del cmake-3.22.0-windows-x86_64.zip
           setx -m PATH "%PATH%;C:\Program Files\CMake\bin"
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: vkonkath/helloworld
+        
+      - name: Go to repository directory
+        run: cd helloworld  # Replace 'helloworld' with the actual directory name if needed
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Fetch the list of merges since the last release
+          git fetch --depth=1 origin main
+          git log --merges --format='%B' $(git describe --tags --abbrev=0)..HEAD > release_notes.txt
+
       # Add your remaining steps here for both Ubuntu and Windows platforms
 
   publish:
@@ -72,14 +83,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          cd $GITHUB_WORKSPACE
-          # Fetch the list of merges since the last release
-          git fetch --depth=1 origin main
-          git log --merges --format='%B' $(git describe --tags --abbrev=0)..HEAD > release_notes.md
-        
       - name: Log into Docker Hub
         uses: docker/login-action@v2
         with:
