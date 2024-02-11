@@ -56,6 +56,12 @@ jobs:
     - name: Verify Perl installation
       run: perl --version
 
+     # Install lcov dependencies
+    - name: Install lcov dependencies
+      run: |
+        apt-get update
+        apt-get install -y build-essential g++ zlib1g-dev
+
     - name: Download and extract lcov
       run: |
         curl -OL https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
