@@ -39,15 +39,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Perl and CMake on Ubuntu
+      - name: Install Perl on Ubuntu
         if: startsWith(matrix.os, 'ubuntu-latest')
         run: |
           sudo apt update
           sudo apt install -y perl
-          wget -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-linux-x86_64.sh
-          chmod +x cmake-linux.sh
-          ./cmake-linux.sh --prefix=/usr/local --exclude-subdir
-          rm cmake-linux.sh
+
+      - name: Install CMake on Ubuntu
+        if: startsWith(matrix.os, 'ubuntu-latest')
+        run: |
+          curl -LO https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-Linux-x86_64.sh
+          mkdir -p $HOME/cmake
+          bash cmake-3.22.0-Linux-x86_64.sh --prefix=$HOME/cmake --skip-license
+          export PATH=$HOME/cmake/bin:$PATH
 
       - name: Install CMake on Windows
         if: startsWith(matrix.os, 'windows-latest')
