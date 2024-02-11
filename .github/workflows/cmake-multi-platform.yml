@@ -41,9 +41,9 @@ jobs:
     # Download and extract Perl
     - name: Download and extract Perl
       run: |
-        curl -OL https://www.perl.org/get.html
-        tar -xzf perl-*.tar.gz
-        cd perl-*
+        curl -OL https://www.cpan.org/src/5.0/perl-5.34.0.tar.gz
+        tar -xzvf perl-5.34.0.tar.gz
+        cd perl-5.34.0
         ./Configure -des -Dprefix=$HOME/perl
         make
         make install
