@@ -42,9 +42,11 @@ jobs:
       run: |
         curl -OL https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
         tar -xzvf lcov-1.14.tar.gz
-        mkdir -p ~/.local/bin
-        mv lcov-1.14/bin/* ~/.local/bin/
-        echo 'export PATH=$PATH:~/.local/bin' >> $GITHUB_ENV
+        mkdir -p lcov-bin
+        mv lcov-1.14/bin/* lcov-bin/
+
+    - name: Set lcov directory in PATH
+      run: echo "PATH=\$PATH:$(pwd)/lcov-bin" >> $GITHUB_ENV
 
     - name: Verify lcov installation
       run: lcov --version
