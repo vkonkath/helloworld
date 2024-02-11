@@ -38,8 +38,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install lcov
-      run: choco install lcov
+    - name: Download and extract lcov
+      run: |
+        wget https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
+        tar -xzvf lcov-1.14.tar.gz
+        mkdir -p ~/.local/bin
+        mv lcov-1.14/bin/* ~/.local/bin/
+        echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
+        source ~/.bashrc
+
+    - name: Verify lcov installation
+      run: lcov --version
 
     - name: Set reusable strings
       id: strings
