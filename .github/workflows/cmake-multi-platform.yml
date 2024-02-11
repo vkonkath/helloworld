@@ -39,8 +39,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          repository: https://github.com/vkonkath/helloworld.git
-          path: my-repo
+          repository: vkonkath/helloworld
 
       - name: Install Perl on Ubuntu
         if: startsWith(matrix.os, 'ubuntu-latest')
@@ -76,7 +75,6 @@ jobs:
       - name: Generate release notes
         id: release_notes
         run: |
-          cd my-repo
           # Fetch the list of merges since the last release
           git fetch --depth=1 origin main
           git log --merges --format='%B' $(git describe --tags --abbrev=0)..HEAD > release_notes.md
