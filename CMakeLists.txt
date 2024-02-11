@@ -51,7 +51,7 @@ add_custom_target(helloworld_coverage
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/coverage-data
         COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR} lcov --capture --directory ${CMAKE_CURRENT_BINARY_DIR} --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
         COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR} lcov --remove ${CMAKE_CURRENT_BINARY_DIR}/coverage.info '/usr/*' '*/test/*' --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage.info.cleaned
-        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR} genhtml ${CMAKE_CURRENT_BINARY_DIR}/coverage.info.cleaned -o ${CMAKE_CURRENT_BINARY_DIR}/coverage-html
+        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR} genhtml ${CMAKE_CURRENT_BINARY_DIR}/coverage.info.cleaned --output-directory ${CMAKE_CURRENT_BINARY_DIR}/coverage-html
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating code coverage report"
 )
