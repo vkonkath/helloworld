@@ -44,8 +44,7 @@ jobs:
         tar -xzvf lcov-1.14.tar.gz
         mkdir -p ~/.local/bin
         mv lcov-1.14/bin/* ~/.local/bin/
-        echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
-        source ~/.bashrc
+        echo 'export PATH=$PATH:~/.local/bin' >> $GITHUB_ENV
 
     - name: Verify lcov installation
       run: lcov --version
