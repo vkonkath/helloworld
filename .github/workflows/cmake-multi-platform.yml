@@ -41,8 +41,8 @@ jobs:
       # Verify Perl installation
       - name: Verify Perl installation
         run: |
-          ls $HOME/perl/bin
           perl --version || echo "Perl not found"
+          ls $HOME/perl/bin
 
      
 
