@@ -76,4 +76,4 @@ jobs:
         push: true
         tags: |
           vkonkathi/helloworld:latest
-         vkonkathi/helloworld:${{ github.sha }}
+          vkonkathi/helloworld:${{ github.sha }}
