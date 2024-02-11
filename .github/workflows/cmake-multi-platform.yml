@@ -40,7 +40,7 @@ jobs:
 
     - name: Download and extract lcov
       run: |
-        wget https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
+        curl -OL https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
         tar -xzvf lcov-1.14.tar.gz
         mkdir -p ~/.local/bin
         mv lcov-1.14/bin/* ~/.local/bin/
