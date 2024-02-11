@@ -42,16 +42,18 @@ jobs:
       - name: Verify Perl installation
         run: perl --version || echo "Perl not found"
 
-      # Install lcov dependencies (only on Ubuntu)
-      - name: Install lcov dependencies
-        if: startsWith(matrix.os, 'ubuntu')
+      - name: Download and extract lcov
         run: |
-          sudo apt-get update
-          sudo apt-get install -y lcov
+          curl -OL https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
+          tar -xzvf lcov-1.14.tar.gz
+          mkdir -p lcov-bin
+          mv lcov-1.14/bin/* lcov-bin/
 
-      # Verify lcov installation
+      - name: Set lcov directory in PATH
+        run: echo "PATH=\$PATH:$(pwd)/lcov-bin" >> $GITHUB_ENV
+
       - name: Verify lcov installation
-        run: lcov --version || echo "lcov not found"
+        run: lcov --version
 
       # Set reusable strings
       - name: Set reusable strings
