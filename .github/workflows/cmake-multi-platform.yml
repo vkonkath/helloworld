@@ -2,9 +2,9 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: [ "main_test" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main_test" ]
+    branches: [ "main" ]
   workflow_dispatch:  # Manual trigger
 
 jobs:
