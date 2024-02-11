@@ -36,82 +36,62 @@ jobs:
             c_compiler: cl
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    # Download and extract Perl
-    - name: Download and extract Perl
-      run: |
-        curl -OL https://www.cpan.org/src/5.0/perl-5.34.0.tar.gz
-        tar -xzvf perl-5.34.0.tar.gz
-        cd perl-5.34.0
-        sh Configure -des -Dprefix=$HOME/perl
-        make
-        make install
+      # Verify Perl installation
+      - name: Verify Perl installation
+        run: perl --version || echo "Perl not found"
 
-  # Set Perl directory in PATH
-    - name: Set Perl directory in PATH
-      run: echo "PATH=\$PATH:$HOME/perl/bin" >> $GITHUB_ENV
+      # Install lcov dependencies (only on Ubuntu)
+      - name: Install lcov dependencies
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt-get update && sudo apt-get install -y lcov
 
-  # Verify Perl installation
-    - name: Verify Perl installation
-      run: perl --version
+      # Verify lcov installation
+      - name: Verify lcov installation
+        run: lcov --version || echo "lcov not found"
 
-     # Install lcov dependencies
-    - name: Install lcov dependencies
-      run: |
-        apt-get update
-        apt-get install -y build-essential g++ zlib1g-dev
+      # Set reusable strings
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Download and extract lcov
-      run: |
-        curl -OL https://github.com/linux-test-project/lcov/releases/download/v1.14/lcov-1.14.tar.gz
-        tar -xzvf lcov-1.14.tar.gz
-        mkdir -p lcov-bin
-        mv lcov-1.14/bin/* lcov-bin/
+      # Configure CMake
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -S ${{ github.workspace }}
 
-    - name: Set lcov directory in PATH
-      run: echo "PATH=\$PATH:$(pwd)/lcov-bin" >> $GITHUB_ENV
+      # Build
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-    - name: Verify lcov installation
-      run: lcov --version
-
-    - name: Set reusable strings
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
-    - name: Configure CMake
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S ${{ github.workspace }}
-
-    - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
-
-    - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.build_type }}
+      # Test
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
 
   publish:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Log into Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log into Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: Dockerfile
-        push: true
-        tags: |
-          vkonkathi/helloworld:latest
-          vkonkathi/helloworld:${{ github.sha }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            vkonkathi/helloworld:latest
+            vkonkathi/helloworld:${{ github.sha }}
