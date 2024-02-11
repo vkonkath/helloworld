@@ -42,7 +42,7 @@ jobs:
       - name: Verify Perl installation
         run: |
           perl --version || echo "Perl not found"
-          ls $HOME/perl/bin
+          perl $HOME/perl/bin/lcov --version || echo "lcov not found"
 
      
 
